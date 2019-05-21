@@ -5,6 +5,11 @@ VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RML_Paging", "RML_Paging\RML_Paging.csproj", "{91582466-61A7-4C37-BD51-1C78CE564D9A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL", "SQL", "{F3DFFB76-C3F3-4321-8A9D-FC00715B6304}"
+	ProjectSection(SolutionItems) = preProject
+		SQL\create objects.sql = SQL\create objects.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
