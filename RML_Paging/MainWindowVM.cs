@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EntityFramework.BulkInsert.Extensions;
 
 namespace RML_Paging
 {
@@ -96,6 +97,40 @@ namespace RML_Paging
                     progress.Report(i * 2);
                 }
             });
+            updateCounts();
+        }
+
+        public async Task Bulk(IProgress<int> progress)
+        {
+            progress.Report(0);
+            await Task.Run(()=> {
+                List<Product> products = new List<Product>();
+                // https://stackoverflow.com/questions/5282999/reading-csv-file-and-storing-values-into-an-array
+                using (Microsoft.VisualBasic.FileIO.TextFieldParser csvParser = new Microsoft.VisualBasic.FileIO.TextFieldParser(@"Products.csv"))
+                {
+                    csvParser.CommentTokens = new string[] { "#" };
+                    csvParser.SetDelimiters(new string[] { ";" });
+                    csvParser.HasFieldsEnclosedInQuotes = true;
+                    //csvParser.ReadLine(); //első sort átléphetjük, ha van fejléc
+                    while (!csvParser.EndOfData)
+                    {
+                        string[] fields = csvParser.ReadFields();
+                        products.Add(new Product() {
+                            // fields[0] az Id, de azt az SQL Server-re hagyjuk
+                            SKU = fields[1],
+                            Description = fields[2],
+                            Unit = fields[3],
+                            Price = Decimal.Parse(fields[4], System.Globalization.CultureInfo.InvariantCulture)
+                        });
+                    }
+                }
+                // https://www.nuget.org/packages/EntityFramework6.BulkInsert/
+                using (MyData mydata = new MyData())
+                {
+                    mydata.BulkInsert<Product>(products);
+                }
+            });
+            progress.Report(100);
             updateCounts();
         }
     }

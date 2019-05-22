@@ -17,6 +17,9 @@
         <Style x:Key="StatNumber" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StatLegend}">
             <Setter Property="FontSize" Value="18"/>
         </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="5,2"/>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -27,6 +30,7 @@
         <DockPanel>
             <StackPanel DockPanel.Dock="Left" VerticalAlignment="Center">
                 <Button Content="Generate +5000 Product &amp; Stock &amp; Service" Click="Generate_Click" />
+                <Button Content="BulkInsert Product.csv" Click="BulkInsert_Click"  />
             </StackPanel>
             <StackPanel x:Name="StatisticsPanel" DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                 <TextBlock Text="Product" Style="{StaticResource StatLegend}"/>
