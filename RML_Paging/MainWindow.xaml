@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RML_Paging"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
+        Title="MainWindow" Width="800" SizeToContent="Height" Loaded="Window_Loaded">
     <Window.DataContext>
         <local:MainWindowVM/>
     </Window.DataContext>
@@ -24,8 +24,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <DockPanel>
             <StackPanel DockPanel.Dock="Left" VerticalAlignment="Center">
@@ -44,5 +44,23 @@
                 <ProgressBar x:Name="GenerationProgress" Maximum="100" Height="20" Margin="5" />
             </StackPanel>
         </DockPanel>
+        <ListBox Grid.Row="1" ItemsSource="{Binding ProductList}" MinHeight="350" Margin="2" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="DarkGray" BorderThickness="1" CornerRadius="4" Background="#FF76ABC9" Padding="4">
+                        <StackPanel>
+                            <TextBlock Text="{Binding SKU}" FontFamily="Consolas" FontSize="16" />
+                            <TextBlock Text="{Binding Description}" FontFamily="Arial Narrow" FontSize="12" />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Border Grid.Row="2" BorderBrush="DarkBlue" BorderThickness="1" Margin="2" Padding="2">
+            <StackPanel >
+                <TextBlock Text="Szűrő" />
+                <TextBox Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" FontSize="16" FontFamily="Consolas" Padding="2" FontWeight="Bold"  />
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>

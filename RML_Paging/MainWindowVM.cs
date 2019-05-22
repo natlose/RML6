@@ -42,6 +42,29 @@ namespace RML_Paging
             }
         }
 
+        private string filter;
+        public string Filter
+        {
+            get { return filter; }
+            set {
+                filter = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ProductList));
+            }
+        }
+
+        public List<Product> ProductList
+        {
+            get
+            {
+                using (MyData mydata = new MyData())
+                {
+                    return mydata.Products.Where(p=>p.SKU.Contains(filter)).OrderBy(p=>p.SKU).Skip(1).Take(10).ToList(); //Az OrderBy kötelező a Skip elé!
+                }
+            }
+        }
+
+
         private void updateCounts()
         {
             using (MyData mydata = new MyData())
@@ -59,7 +82,8 @@ namespace RML_Paging
 
         public async Task Generate(IProgress<int> progress)
         {
-            await Task.Run(()=> {
+            await Task.Run(() =>
+            {
                 Random rnd = new Random(DateTime.Now.Millisecond);
                 progress.Report(0);
                 for (int i = 0; i < 50; i++)
@@ -102,8 +126,9 @@ namespace RML_Paging
 
         public async Task Bulk(IProgress<int> progress)
         {
-            progress.Report(0);
-            await Task.Run(()=> {
+            progress.Report(50);
+            await Task.Run(() =>
+            {
                 List<Product> products = new List<Product>();
                 // https://stackoverflow.com/questions/5282999/reading-csv-file-and-storing-values-into-an-array
                 using (Microsoft.VisualBasic.FileIO.TextFieldParser csvParser = new Microsoft.VisualBasic.FileIO.TextFieldParser(@"Products.csv"))
@@ -115,7 +140,8 @@ namespace RML_Paging
                     while (!csvParser.EndOfData)
                     {
                         string[] fields = csvParser.ReadFields();
-                        products.Add(new Product() {
+                        products.Add(new Product()
+                        {
                             // fields[0] az Id, de azt az SQL Server-re hagyjuk
                             SKU = fields[1],
                             Description = fields[2],
@@ -131,6 +157,7 @@ namespace RML_Paging
                 }
             });
             progress.Report(100);
+            await Task.Delay(1000); //csak hogy lássa a 100%-ot a kijelzőn
             updateCounts();
         }
     }

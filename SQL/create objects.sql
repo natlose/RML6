@@ -27,3 +27,8 @@ CREATE TABLE dbo.[Service]
     Price DECIMAL NULL
 )
 GO
+
+CREATE NONCLUSTERED INDEX IX_Product_SKU ON dbo.Product
+(
+	SKU ASC
+)
