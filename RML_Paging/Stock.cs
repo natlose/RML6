@@ -23,13 +23,13 @@ namespace RML_Paging
             }
         }
 
-        private decimal price;
+        private decimal quantity;
 
-        public decimal Price
+        public decimal Quantity
         {
-            get { return price; }
+            get { return quantity; }
             set {
-                price = value;
+                quantity = value;
                 OnPropertyChanged();
             }
         }

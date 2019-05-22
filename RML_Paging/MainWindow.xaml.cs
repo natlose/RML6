@@ -24,5 +24,21 @@ namespace RML_Paging
         {
             InitializeComponent();
         }
+
+        private async void Generate_Click(object sender, RoutedEventArgs e)
+        {
+            IProgress<int> progress = new Progress<int>(completed => {
+                GenerationProgress.Value = completed;
+            });
+            ProgressPanel.Visibility = Visibility.Visible;
+
+            await ((MainWindowVM)DataContext).Generate(progress);
+            ProgressPanel.Visibility = Visibility.Collapsed;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            ((MainWindowVM)DataContext).LoadData();
+        }
     }
 }

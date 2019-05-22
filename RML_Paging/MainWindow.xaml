@@ -5,8 +5,40 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RML_Paging"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
+    <Window.DataContext>
+        <local:MainWindowVM/>
+    </Window.DataContext>
+    <Window.Resources>
+        <Style x:Key="StatLegend" TargetType="{x:Type TextBlock}">
+            <Setter Property="Margin" Value="5,5"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="StatNumber" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StatLegend}">
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+    </Window.Resources>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Left" VerticalAlignment="Center">
+                <Button Content="Generate +5000 Product &amp; Stock &amp; Service" Click="Generate_Click" />
+            </StackPanel>
+            <StackPanel x:Name="StatisticsPanel" DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <TextBlock Text="Product" Style="{StaticResource StatLegend}"/>
+                <TextBlock Text="{Binding ProductCount}" Style="{StaticResource StatNumber}"/>
+                <TextBlock Text="Stock" Style="{StaticResource StatLegend}"/>
+                <TextBlock Text="{Binding StockCount}" Style="{StaticResource StatNumber}"/>
+                <TextBlock Text="Service" Style="{StaticResource StatLegend}"/>
+                <TextBlock Text="{Binding ServiceCount}" Style="{StaticResource StatNumber}"/>
+            </StackPanel>
+            <StackPanel x:Name="ProgressPanel" DockPanel.Dock="Right" VerticalAlignment="Center" Visibility="Hidden">
+                <ProgressBar x:Name="GenerationProgress" Maximum="100" Height="20" Margin="5" />
+            </StackPanel>
+        </DockPanel>
     </Grid>
 </Window>

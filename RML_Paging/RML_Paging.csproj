@@ -62,6 +62,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="MainWindowVM.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="Stock.cs" />
     <Page Include="MainWindow.xaml">

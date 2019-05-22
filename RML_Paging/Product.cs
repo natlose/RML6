@@ -51,6 +51,6 @@ namespace RML_Paging
             }
         }
 
-        public ObservableCollection<Stock> Stocks { get; set; }
+        public ObservableCollection<Stock> Stocks { get; set; } = new ObservableCollection<Stock>();
     }
 }

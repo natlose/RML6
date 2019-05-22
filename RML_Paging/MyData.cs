@@ -9,17 +9,18 @@ namespace RML_Paging
 {
     class MyData : DbContext
     {
-        public MyData() : base ("Server=.;Database=RMLabor6;Trusted_Connection=True;MultipleActiveResultSets=true;") { }
+        public MyData() : base ("Server=.;Database=RMLabor6;Trusted_Connection=true;MultipleActiveResultSets=true;") { }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             #region Product
+            modelBuilder.Entity<Product>().ToTable("Product");
             modelBuilder.Entity<Product>().HasKey(p => p.Id); //ez egyébként a default
             modelBuilder.Entity<Product>().Property(p => p.SKU)
                 .IsRequired()
-                .HasMaxLength(30);
+                .HasMaxLength(36);
             modelBuilder.Entity<Product>().Property(p => p.Description)
                 .IsRequired()
                 .HasMaxLength(200)
@@ -34,12 +35,14 @@ namespace RML_Paging
             #endregion
 
             #region Stock
+            modelBuilder.Entity<Stock>().ToTable("Stock");
             modelBuilder.Entity<Stock>().Property(s => s.Shelf)
                 .IsRequired()
                 .HasMaxLength(3);
             #endregion
 
             #region Service
+            modelBuilder.Entity<Service>().ToTable("Service");
             modelBuilder.Entity<Service>().Property(s => s.Nr)
                 .IsRequired()
                 .HasMaxLength(10);
