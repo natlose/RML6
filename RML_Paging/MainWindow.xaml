@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RML_Paging"
         mc:Ignorable="d"
-        Title="MainWindow" Width="800" SizeToContent="Height" Loaded="Window_Loaded">
+        Title="MainWindow" Width="800" SizeToContent="Height" Loaded="Window_Loaded" ResizeMode="NoResize">
     <Window.DataContext>
         <local:MainWindowVM/>
     </Window.DataContext>
@@ -26,6 +26,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <DockPanel>
             <StackPanel DockPanel.Dock="Left" VerticalAlignment="Center">
@@ -44,21 +45,43 @@
                 <ProgressBar x:Name="GenerationProgress" Maximum="100" Height="20" Margin="5" />
             </StackPanel>
         </DockPanel>
-        <ListBox Grid.Row="1" ItemsSource="{Binding ProductList}" MinHeight="350" Margin="2" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}">
+        <ListBox Grid.Row="1" ItemsSource="{Binding ProductList}" Height="430" Margin="2" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderBrush="DarkGray" BorderThickness="1" CornerRadius="4" Background="#FF76ABC9" Padding="4">
-                        <StackPanel>
-                            <TextBlock Text="{Binding SKU}" FontFamily="Consolas" FontSize="16" />
-                            <TextBlock Text="{Binding Description}" FontFamily="Arial Narrow" FontSize="12" />
-                        </StackPanel>
+                    <Border CornerRadius="5" Background="White" Padding="3" Width="550" HorizontalAlignment="Stretch">
+                        <Border.Effect>
+                            <DropShadowEffect Color="#FF78929E" Opacity="0.5"/>
+                        </Border.Effect>
+                        <DockPanel LastChildFill="False">
+                            <StackPanel DockPanel.Dock="Left">
+                                <TextBlock Text="{Binding SKU}" FontFamily="Consolas" FontSize="16" />
+                                <TextBlock Text="{Binding Description}" FontFamily="Arial Narrow" FontSize="12" />
+                            </StackPanel>
+                            <TextBlock DockPanel.Dock="Right" Text="{Binding Unit}" VerticalAlignment="Center" FontFamily="Consolas" FontSize="24"/>
+                            <TextBlock DockPanel.Dock="Right" Text="{Binding Price, StringFormat=\{0:N\}/}" VerticalAlignment="Center" FontFamily="Consolas" FontSize="24"/>
+                        </DockPanel>
                     </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Border Grid.Row="2" BorderBrush="DarkBlue" BorderThickness="1" Margin="2" Padding="2">
-            <StackPanel >
-                <TextBlock Text="Szűrő" />
+        <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center">
+            <Button Content="&lt;" Width="100" Click="Previous_Click"/>
+            <DockPanel Width="200">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding CurrentPage}" />
+                    <TextBlock Text="/" />
+                    <TextBlock Text="{Binding PageCount, Mode=OneWay}" />
+                </StackPanel>
+            </DockPanel>
+            <Button Content="&gt;" Width="100" Click="Next_Click"/>
+        </StackPanel>
+        <Border Grid.Row="3" CornerRadius="5" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Padding="3" Margin="2">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Szűrő" />
+                    <RadioButton Content="elején" GroupName="filterPolicy" IsChecked="True" Margin="20,2,0,2" Checked="Elejen_Checked"/>
+                    <RadioButton Content="bárhol" GroupName="filterPolicy" Margin="10,2,0,2" Checked="Barhol_Checked"/>
+                </StackPanel>
                 <TextBox Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" FontSize="16" FontFamily="Consolas" Padding="2" FontWeight="Bold"  />
             </StackPanel>
         </Border>

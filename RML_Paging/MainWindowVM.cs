@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using EntityFramework.BulkInsert.Extensions;
 
 namespace RML_Paging
 {
     public class MainWindowVM : ObservableObjectBase
     {
+        public MainWindowVM()
+        {
+            filterTimer.Elapsed += FilterTimer_Elapsed;
+            filterTimer.AutoReset = false;
+            IsContainsFilter = false;
+        }
+
         private int productCount;
         public int ProductCount
         {
@@ -42,13 +50,63 @@ namespace RML_Paging
             }
         }
 
-        private string filter;
+        private string filter = "";
         public string Filter
         {
             get { return filter; }
-            set {
+            set
+            {
                 filter = value;
                 OnPropertyChanged();
+                filterTimer.Stop();
+                filterTimer.Start();
+            }
+        }
+
+        private Timer filterTimer = new Timer(750);
+        private void FilterTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            OnPropertyChanged(nameof(ProductList)); //emiatt fogja lekérni újra a ProductList értékét, ami viszont az új szűrő szerint lesz
+            if (CurrentPage > PageCount) CurrentPage = PageCount;
+            OnPropertyChanged(nameof(PageCount)); //ez is változhat az új szűrés miatt
+        }
+
+        private const int pageSize = 10;
+        private int productListCount;
+
+        private int currentPage = 1;
+        public int CurrentPage
+        {
+            get { return currentPage; }
+            set
+            {
+                currentPage = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ProductList)); 
+            }
+        }
+
+        public int PageCount
+        {
+            get { return ((int) ((double) productListCount / pageSize)) + 1; }
+        }
+
+        public void PreviousPage()
+        {
+            if (CurrentPage > 1) CurrentPage--;
+        }
+
+        public void NextPage()
+        {
+            if (CurrentPage < PageCount) CurrentPage++; 
+        }
+
+        private bool isContainsFilter;
+        public bool IsContainsFilter
+        {
+            set
+            {
+                isContainsFilter = value;
                 OnPropertyChanged(nameof(ProductList));
             }
         }
@@ -59,7 +117,11 @@ namespace RML_Paging
             {
                 using (MyData mydata = new MyData())
                 {
-                    return mydata.Products.Where(p=>p.SKU.Contains(filter)).OrderBy(p=>p.SKU).Skip(1).Take(10).ToList(); //Az OrderBy kötelező a Skip elé!
+                    IQueryable<Product> query;
+                    if (isContainsFilter) query = mydata.Products.Where(p => p.SKU.Contains(filter));
+                    else query = mydata.Products.Where(p => p.SKU.StartsWith(filter));
+                    productListCount = query.Count(); //ez nagyon drága!
+                    return query.OrderBy(p => p.SKU).Skip((currentPage - 1) * pageSize).Take(pageSize).ToList(); //Az OrderBy kötelező a Skip elé!
                 }
             }
         }

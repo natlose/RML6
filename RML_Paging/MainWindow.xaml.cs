@@ -49,5 +49,25 @@ namespace RML_Paging
             await ((MainWindowVM)DataContext).Bulk(progress);
             ProgressPanel.Visibility = Visibility.Collapsed;
         }
+
+        private void Previous_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainWindowVM)DataContext).PreviousPage();
+        }
+
+        private void Next_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainWindowVM)DataContext).NextPage();
+        }
+
+        private void Elejen_Checked(object sender, RoutedEventArgs e)
+        {
+            ((MainWindowVM)DataContext).IsContainsFilter = false;
+        }
+
+        private void Barhol_Checked(object sender, RoutedEventArgs e)
+        {
+            ((MainWindowVM)DataContext).IsContainsFilter = true;
+        }
     }
 }
